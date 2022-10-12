@@ -2,7 +2,6 @@
   "name": "chutesal-api",
   "version": "1.0.0",
   "license": "MIT",
-  "type": "module",
   "engines": {
     "node": "16.x"
   },
