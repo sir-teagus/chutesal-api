@@ -123,6 +123,22 @@ app.post("/schools/:id/cups", async (request, response) => {
   return response.status(201).json(cup);
 });
 
+// UPDATE CUP STATUS
+app.patch("/cups/:id/status", async (request, response) => {
+  const cupId = Number(request.params.id);
+
+  const { status } = request.body;
+
+  const cup = await prisma.cup.update({
+    where: { id: cupId },
+    data: {
+      status,
+    },
+  });
+
+  return response.status(200).json({ cup });
+});
+
 // UPDATE CUP MATCHES
 app.patch("/cups/:id/matches", async (request, response) => {
   const cupId = Number(request.params.id);
