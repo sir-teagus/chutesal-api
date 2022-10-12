@@ -11,7 +11,9 @@ app.use(cors());
 
 // LIST SCHOOLS
 app.get("/schools", async (request, response) => {
-  const schools = await prisma.school.findMany();
+  const schools = await prisma.school.findMany({
+    include: { cupManager: true },
+  });
 
   return response.status(200).json(
     schools.map((school) => {
@@ -153,6 +155,23 @@ app.patch("/cups/:id/matches", async (request, response) => {
   });
 
   return response.status(200).json({ ...cup, matches });
+});
+
+// LIST PROFILE BY SCHOOL
+app.get("/schools/:id/profile", async (request, response) => {
+  const schoolId = Number(request.params.id);
+
+  const cupManager = await prisma.profile.findUnique({
+    where: { schoolId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      userName: true,
+    },
+  });
+
+  return response.status(200).json({ cupManager });
 });
 
 // LIST CUPS BY SCHOOL
