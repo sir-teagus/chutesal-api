@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id         Int      @id @default(autoincrement())
+  name       String
+  address    String
+  venues     String
+  cupManager Profile?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  cups       Cup[]
+}
+
+model Profile {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String
+  userName String @unique
+  password String
+  School   School @relation(fields: [schoolId], references: [id])
+  schoolId Int    @unique
+}
+
+model Cup {
+  id               Int      @id @default(autoincrement())
+  status           Status   @default(PLANEJADO)
+  name             String
+  signUpPeriod     String
+  cupGamesPeriod   String
+  announcementDate DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  matches          String
+  teams            Team[]
+  School           School   @relation(fields: [schoolId], references: [id])
+  schoolId         Int
+}
+
+model Team {
+  id      Int    @id @default(autoincrement())
+  name    String
+  players String
+  Cup     Cup    @relation(fields: [cupId], references: [id])
+  cupId   Int
+}
+
+model Enrollment {
+  fullName  String
+  nickName  String?
+  birthDate DateTime
+  whatsApp  String
+  cupId     String
+
+  @@unique([fullName, whatsApp, cupId])
+}
+
+enum Status {
+  PLANEJADO
+  ANDAMENTO
+  CANCELADO
+  EXECUTADO
+}
