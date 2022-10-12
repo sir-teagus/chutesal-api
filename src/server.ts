@@ -40,6 +40,17 @@ app.post("/schools", async (request, response) => {
   return response.status(201).json(school);
 });
 
+// DELETE SCHOOL
+app.delete("/schools/:id", async (request, response) => {
+  const schoolId = Number(request.params.id);
+
+  const school = await prisma.school.delete({
+    where: { id: schoolId },
+  });
+
+  return response.status(410).json(school);
+});
+
 // CREATE PROFILE (CUP MANAGER)
 app.post("/profiles", async (request, response) => {
   const { name, email, userName, password, schoolId } = request.body;
